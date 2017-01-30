@@ -23,9 +23,11 @@ namespace StocksPortfolio.ViewModels
         public string Email { get; set; }
         
         [Required(ErrorMessage = "Password is required")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         
         [Compare("Password", ErrorMessage = "Passwords don't match")]
+        [DataType(DataType.Password)]
         public string Password2 { get; set; }
 
     }
