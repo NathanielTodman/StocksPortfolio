@@ -1,0 +1,35 @@
+﻿{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+<div><h2>Transaction history</h2></div>
+<div class="portfolio">
+    <table style="width:100%">
+        <tr>
+            <th>Buy/Sell</th>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Shares</th>
+            <th>Total</th>
+            <th>Date</th>
+        </tr>
+        {% for stock in stocks %}
+        <tr>
+            {% if stock.buy_sell=="Sell" %}
+            <td class="neg">{{stock.buy_sell}}</td>
+            {% elif stock.buy_sell=="Buy" %}
+            <td class="pos">{{stock.buy_sell}}</td>
+            {% endif %}
+            <td>{{stock.company}}</td>
+            <td>{{stock.price|usd}}</td>
+            <td>{{stock.quantity|int}}</td>
+            <td>{{stock.total|usd}}</td>
+            <td width=20%>{{stock.date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

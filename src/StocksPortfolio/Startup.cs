@@ -4,9 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StocksPortfolio.Entities;
+using Microsoft.EntityFrameworkCore;
+using StocksPortfolio.Services;
 
 namespace StocksPortfolio
 {
@@ -16,7 +20,7 @@ namespace StocksPortfolio
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -28,14 +32,24 @@ namespace StocksPortfolio
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddSingleton(Configuration);
+            services.AddMvc()
+                .AddMvcOptions(o=> o.OutputFormatters.Add(
+                    new XmlDataContractSerializerOutputFormatter()))
+                ;
+            var connectionString = Configuration["ConnectionStrings:FoxConnection"];
+            services.AddDbContext<FoxContext>(o=>o.UseSqlServer(connectionString));
+
+            services.AddScoped<IFoxStocksRepository, FoxStocksRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, FoxContext foxContext)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+
 
             if (env.IsDevelopment())
             {
@@ -47,13 +61,25 @@ namespace StocksPortfolio
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            foxContext.EnsureSeedDataForContext();
+
             app.UseStaticFiles();
+
+            AutoMapper.Mapper.Initialize(config =>
+            {
+                config.CreateMap<Entities.Users, Models.Users>();
+                config.CreateMap<Entities.Transactions, Models.Transactions>();
+                config.CreateMap<Models.CreateTransaction, Entities.Transactions>();
+                config.CreateMap<Models.CreateUser, Entities.Users>();
+            });
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" }
+                );
             });
         }
     }
