@@ -1,89 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Portfolio";
+    ViewData["Title"] = "Welcome";
 }
-
-<div><h2>Portfolio</h2></div>
-<div class="portfolio">
-    <table style="width:100%">
-        <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th></th>
-            <th>Shares</th>
-            <th>Bought Price</th>
-            <th>Current Price</th>
-            <th>Change</th>
-            <th>Total</th>
-        </tr>
-        {% for stock in stocks %}
-        <tr>
-            <td>{{stock.symbol}}</td>
-            <td width=22%>{{stock.name}}</td>
-            <td>
-                <a href="{{url_for('index',b=stock.symbol)}}" class="btn btn-default buy">
-                    Buy</a>
-                    <a href="{{url_for('index',s=stock.symbol)}}" class="btn btn-default sell">Sell</a>
-            </td>
-            <td>{{stock.shares}}</td>
-            <td>{{stock.bought_price|usd}}</td>
-            <td>{{stock.current_price|usd}}</td>
-            {% if stock.change|float < 0 %}
-            <td class="neg">{{stock.change}}</td>
-            {% elif stock.change|float > 0 %}
-            <td class="pos">{{stock.change}}</td>
-            {% else %}
-            <td><b>{{stock.change}}</b></td>
-            {% endif %}
-            <td>{{stock.total|usd}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<div class="col-md-12">
+    <div><h2>Welcome to FoxStocks!</h2></div>
+    <div>
+        <p>This app allows you to create a live stocks portfolio (with fake money!)</p>
+        <a asp-controller="Home" asp-action="Portfolio" class="btn btn-lg btn-success">View my portfolio</a>
+    </div>
 </div>
-<br>
-    {% if request.args.get('b') %}
-<div align="left">
-    <form action="{{ url_for('buy') }}" method="post">
-        <fieldset>
-            <div class="form-group">
-                <input autocomplete="off" class="form-control" name="symbol"
-                       placeholder="Company symbol" type="text" value="{{request.args.get('b')}}" required />
-            </div>
-            <div class="form-group">
-                <input autocomplete="off" autofocus class="form-control" name="number"
-                       placeholder="Number of shares" type="number" required />
-            </div>
-            <div class="form-group">
-                <button class="btn btn-default" type="submit">Buy</button>
-                <a href="{{url_for('index')}}" class="btn btn-default">Cancel</a>
-            </div>
-        </fieldset>
-    </form>
-</div>
-    {% elif request.args.get('s') %}
-<div align="left">
-    <form action="{{ url_for('sell') }}" method="post">
-        <fieldset>
-            <div class="form-group">
-                <input autocomplete="off" class="form-control" name="symbol"
-                       placeholder="Company symbol" type="text" value="{{request.args.get('s')}}" required />
-            </div>
-            <div class="form-group">
-                <input autocomplete="off" autofocus class="form-control" name="number"
-                       placeholder="Number of shares" type="number" required />
-            </div>
-            <div class="form-group">
-                <button class="btn btn-default" type="submit">Sell</button>
-                <a href="{{url_for('index')}}" class="btn btn-default">Cancel</a>
-            </div>
-        </fieldset>
-    </form>
-</div>
-    {% else %}
-<div>
-    <p>Current balance: <b>{{ balance }}</b></p>
-    <p>Shares total: <b>{{ total }}</b></p>
-    <p>Grand total: <b>{{ grandtotal }}</b></p>
-</div>
-    {% endif %}
-{% endblock %}
-

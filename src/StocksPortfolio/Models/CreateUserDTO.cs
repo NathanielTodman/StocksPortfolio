@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StocksPortfolio.Models
 {
-    public class CreateUser
+    public class CreateUserDTO
     {
         [Required]
         [MaxLength(30)]

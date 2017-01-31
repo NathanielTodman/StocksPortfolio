@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StocksPortfolio.Models
 {
-    public class Users
+    public class UserDTO
     {
         public int Id { get; set; }
         public string FirstName { get; set; }        

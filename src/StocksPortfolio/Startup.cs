@@ -67,10 +67,12 @@ namespace StocksPortfolio
 
             AutoMapper.Mapper.Initialize(config =>
             {
-                config.CreateMap<Entities.Users, Models.Users>();
-                config.CreateMap<Entities.Transactions, Models.Transactions>();
-                config.CreateMap<Models.CreateTransaction, Entities.Transactions>();
-                config.CreateMap<Models.CreateUser, Entities.Users>();
+                config.CreateMap<Entities.Users, Models.UserDTO>();
+                config.CreateMap<Entities.Transactions, Models.TransactionDTO>();
+                config.CreateMap<Models.CreateTransactionDTO, Entities.Transactions>();
+                config.CreateMap<Models.CreateUserDTO, Entities.Users>();
+                config.CreateMap<Models.UpdateUserDTO, Entities.Users>();
+                config.CreateMap<Entities.Users, Models.UpdateUserDTO>();
             });
 
             app.UseMvc(routes =>

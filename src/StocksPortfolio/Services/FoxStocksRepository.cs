@@ -17,6 +17,16 @@ namespace StocksPortfolio.Services
             _context = context;
         }
 
+        public bool UserExists(int userId)
+        {
+            var check = _context.Users.Where(u=> u.Id == userId).ToList();
+            if(check == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public IEnumerable<Transactions> GetPortfolio(int userId)
         {
             return _context.Transactions.Where(c => c.UserId == userId).ToList();
@@ -27,12 +37,8 @@ namespace StocksPortfolio.Services
             return _context.Transactions.Where(c => c.UserId == userId && c.Id == transactionId).FirstOrDefault();
         }
 
-        public Users GetUser(int userId, bool includePortfolio)
-        {
-            if (includePortfolio)
-            {
-                return _context.Users.Include(p => p.Portfolio).Where(c => c.Id == userId).FirstOrDefault();
-            }
+        public Users GetUser(int userId)
+        { 
             return _context.Users.Where(c => c.Id == userId).FirstOrDefault();
         }
 
@@ -40,5 +46,22 @@ namespace StocksPortfolio.Services
         {
             return _context.Users.OrderBy(c=>c.Surname).ToList();
         }
+
+        public void AddTransaction(int userId, Transactions transaction)
+        {
+            var user = GetUser(userId);
+            user.Portfolio.Add(transaction);
+        }
+
+        public void DeleteTransaction(Transactions transaction)
+        {
+            _context.Transactions.Remove(transaction);
+        }
+
+        public bool Save()
+        {
+            return (_context.SaveChanges() >= 0);
+        }
+
     }
 }

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<StocksPortfolio.Models.TransactionDTO>
+@{
+    ViewData["Title"] = "Portfolio";
+}
+
+<div><h2>Portfolio</h2></div>
+<div class="portfolio">
+    <table style="width:100%">
+        <tr>
+            <th>Symbol</th>
+            <th>Name</th>
+            <th></th>
+            <th>Shares</th>
+            <th>Bought Price</th>
+            <th>Current Price</th>
+            <th>Change</th>
+            <th>Total</th>
+        </tr>
+        @foreach (var stock in Model)
+        {
+            <tr>
+                <td>@stock.Symbol</td>
+                <td width=22%>@stock.Company</td>
+                <td>
+                    <a asp-controller="Home" asp-action="BuyNow" class="btn btn-default buy">
+                        Buy
+                    </a>
+                    <a asp-controller="Home" asp-action="SellNow" class="btn btn-default sell">Sell</a>
+                </td>
+                <td>@stock.Quantity</td>
+                <td>@stock.Price</td>
+                <td>function to return current price</td>
+                @*if change in price is positive td class = pos*@
+                <td class="pos">stock.Change</td>
+                @*else if change is negative 
+                <td class="neg">stock.Change</td>*@
+                @* else
+                <td><b>stock.Change</b></td>
+                *@
+                <td>@stock.Total</td>
+            </tr>
+        }
+    </table>
+</div>
+<br>
+    {% if request.args.get('b') %}
+<div align="left">
+    <form action="{{ url_for('buy') }}" method="post">
+        <fieldset>
+            <div class="form-group">
+                <input autocomplete="off" class="form-control" name="symbol"
+                       placeholder="Company symbol" type="text" value="{{request.args.get('b')}}" required />
+            </div>
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="number"
+                       placeholder="Number of shares" type="number" required />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" type="submit">Buy</button>
+                <a href="{{url_for('index')}}" class="btn btn-default">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
+</div>
+    {% elif request.args.get('s') %}
+<div align="left">
+    <form action="{{ url_for('sell') }}" method="post">
+        <fieldset>
+            <div class="form-group">
+                <input autocomplete="off" class="form-control" name="symbol"
+                       placeholder="Company symbol" type="text" value="{{request.args.get('s')}}" required />
+            </div>
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="number"
+                       placeholder="Number of shares" type="number" required />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" type="submit">Sell</button>
+                <a href="{{url_for('index')}}" class="btn btn-default">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
+</div>
+    {% else %}
+<div>
+    <p>Current balance: <b>{{ balance }}</b></p>
+    <p>Shares total: <b>{{ total }}</b></p>
+    <p>Grand total: <b>{{ grandtotal }}</b></p>
+</div>
+    {% endif %}
+{% endblock %}
+

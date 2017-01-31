@@ -8,15 +8,36 @@ using StocksPortfolio.Models;
 using Microsoft.Extensions.Configuration;
 using StocksPortfolio.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StocksPortfolio.Controllers
 {
     public class HomeController : Controller
     {
+        private IFoxStocksRepository _repository;
+
+        public HomeController(IFoxStocksRepository foxRepository)
+        {
+            _repository = foxRepository;
+        }
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        [Authorize]
+        public IActionResult Portfolio()
+        {
+
+            var data = _repository.GetPortfolio(1);
+            if (data == null)
+            {
+                return View();
+            }
+            var results = Mapper.Map<IEnumerable<TransactionDTO>>(data);
+
+            return View(results);
         }
 
         public IActionResult Buy()

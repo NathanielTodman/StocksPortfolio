@@ -29,6 +29,7 @@ namespace StocksPortfolio.Entities
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        public double Cash { get; set; }
 
         public ICollection<Transactions> Portfolio { get; set; }
         = new List<Transactions>();
