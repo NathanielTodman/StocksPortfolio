@@ -17,51 +17,76 @@ namespace StocksPortfolio.Services
             _context = context;
         }
 
-        public bool UserExists(int userId)
+        public void AddTransaction(string userId, Transactions transaction)
         {
-            var check = _context.Users.Where(u=> u.Id == userId).ToList();
-            if(check == null)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public IEnumerable<Transactions> GetPortfolio(int userId)
-        {
-            return _context.Transactions.Where(c => c.UserId == userId).ToList();
-        }
-
-        public Transactions GetTransaction(int userId, int transactionId)
-        {
-            return _context.Transactions.Where(c => c.UserId == userId && c.Id == transactionId).FirstOrDefault();
-        }
-
-        public Users GetUser(int userId)
-        { 
-            return _context.Users.Where(c => c.Id == userId).FirstOrDefault();
-        }
-
-        public IEnumerable<Users> GetUsers()
-        {
-            return _context.Users.OrderBy(c=>c.Surname).ToList();
-        }
-
-        public void AddTransaction(int userId, Transactions transaction)
-        {
-            var user = GetUser(userId);
-            user.Portfolio.Add(transaction);
+            throw new NotImplementedException();
         }
 
         public void DeleteTransaction(Transactions transaction)
         {
-            _context.Transactions.Remove(transaction);
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Transactions> GetPortfolio(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Transactions GetTransaction(string userId, int transactionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FoxUser GetUser(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<FoxUser> GetUsers()
+        {
+            throw new NotImplementedException();
         }
 
         public bool Save()
         {
-            return (_context.SaveChanges() >= 0);
+            throw new NotImplementedException();
         }
+
+        //public IEnumerable<Transactions> GetPortfolio(string userId)
+        //{
+        //    return _context.Transactions.Where(c => c.UserId == userId).ToList();
+        //}
+
+        //public Transactions GetTransaction(string userId, int transactionId)
+        //{
+        //    return _context.Transactions.Where(c => c.UserId == userId && c.Id == transactionId).FirstOrDefault();
+        //}
+
+        //public FoxUser GetUser(string userId)
+        //{ 
+        //    return _context.Users.Where(c => c.Id == userId).FirstOrDefault();
+        //}
+
+        //public IEnumerable<FoxUser> GetUsers()
+        //{
+        //    return _context.Users.OrderBy(c=>c.Surname).ToList();
+        //}
+
+        //public void AddTransaction(string userId, Transactions transaction)
+        //{
+        //    var user = GetUser(userId);
+        //    user.Portfolio.Add(transaction);
+        //}
+
+        //public void DeleteTransaction(Transactions transaction)
+        //{
+        //    _context.Transactions.Remove(transaction);
+        //}
+
+        //public bool Save()
+        //{
+        //    return (_context.SaveChanges() >= 0);
+        //}
 
     }
 }

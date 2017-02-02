@@ -21,117 +21,104 @@ namespace StocksPortfolio.Controllers
             _foxStocksRepository = foxStocksRepository;
         }
 
-        [HttpGet("Getusers")]
-        public IActionResult GetUsers()
-        {
-            var userEntities = _foxStocksRepository.GetUsers();
-            var results = Mapper.Map<IEnumerable<UserDTO>>(userEntities);
-            return Ok(results);
-        }
+        //[HttpGet("Getusers")]
+        //public IActionResult GetUsers()
+        //{
+        //    var userEntities = _foxStocksRepository.GetUsers();
+        //    var results = Mapper.Map<IEnumerable<UserDTO>>(userEntities);
+        //    return Ok(results);
+        //}
 
-        [HttpGet("Portfolio/{id}")]
-        public IActionResult DisplayPortfolio(int id)
-        {
-            var portfolioEntities = _foxStocksRepository.GetPortfolio(id);
-            var results = Mapper.Map<IEnumerable<TransactionDTO>>(portfolioEntities);
-            return Ok(results);
-        }
-        [HttpGet("Portfolio/{id}/{transId}", Name = "DisplayTransaction")]
-        public IActionResult DisplayTransaction(int id, int transId)
-        {
-            var portfolioEntities = _foxStocksRepository.GetTransaction(id, transId);
-            var results = Mapper.Map<IEnumerable<TransactionDTO>>(portfolioEntities);
-            return Ok(results);
-        }
-        [HttpPost("Trade/{id}")]
-        public IActionResult CreateTransaction(int id, [FromBody] CreateTransactionDTO transaction)
-        {
-            if (transaction == null)
-            {
-                return BadRequest();
-            }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (!_foxStocksRepository.UserExists(id))
-            {
-                return NotFound();
-            }
-            var newTransaction = Mapper.Map<Entities.Transactions>(transaction);
-            _foxStocksRepository.AddTransaction(id, newTransaction);
-            if (!_foxStocksRepository.Save())
-            {
-                return StatusCode(500, "Something went wrong.");
-            }
-            var createdTransaction = Mapper.Map<Models.TransactionDTO>(newTransaction);
+        //[HttpGet("Portfolio/{id}")]
+        //public IActionResult DisplayPortfolio(string id)
+        //{
+        //    var portfolioEntities = _foxStocksRepository.GetPortfolio(id);
+        //    var results = Mapper.Map<IEnumerable<TransactionDTO>>(portfolioEntities);
+        //    return Ok(results);
+        //}
+        //[HttpGet("Portfolio/{id}/{transId}", Name = "DisplayTransaction")]
+        //public IActionResult DisplayTransaction(string id, int transId)
+        //{
+        //    var portfolioEntities = _foxStocksRepository.GetTransaction(id, transId);
+        //    var results = Mapper.Map<IEnumerable<TransactionDTO>>(portfolioEntities);
+        //    return Ok(results);
+        //}
+        //[HttpPost("Trade/{id}")]
+        //public IActionResult CreateTransaction(string id, [FromBody] CreateTransactionDTO transaction)
+        //{
+        //    if (transaction == null)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    var newTransaction = Mapper.Map<Entities.Transactions>(transaction);
+        //    _foxStocksRepository.AddTransaction(id, newTransaction);
+        //    if (!_foxStocksRepository.Save())
+        //    {
+        //        return StatusCode(500, "Something went wrong.");
+        //    }
+        //    var createdTransaction = Mapper.Map<Models.TransactionDTO>(newTransaction);
 
-            return CreatedAtRoute("DisplayTransaction", new
-            { id = id, transId = createdTransaction.Id }, createdTransaction);
-        }
-        [HttpPatch("Update/{id}")]
-        public IActionResult UpdateUser(int id, [FromBody]JsonPatchDocument<UpdateUserDTO> UpdateUser)
-        {
-            if (UpdateUser == null)
-            {
-                return BadRequest();
-            }
-            
-            if (!_foxStocksRepository.UserExists(id))
-            {
-                return NotFound();
-            }
-            var userEntity = _foxStocksRepository.GetUser(id);
-            if(userEntity == null)
-            {
-                return NotFound();
-            }
+        //    return CreatedAtRoute("DisplayTransaction", new
+        //    { id = id, transId = createdTransaction.Id }, createdTransaction);
+        //}
+        //[HttpPatch("Update/{id}")]
+        //public IActionResult UpdateUser(string id, [FromBody]JsonPatchDocument<UpdateUserDTO> UpdateUser)
+        //{
+        //    if (UpdateUser == null)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    var userEntity = _foxStocksRepository.GetUser(id);
+        //    if(userEntity == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var userToUpdate = Mapper.Map<UpdateUserDTO>(userEntity);
+        //    var userToUpdate = Mapper.Map<UpdateUserDTO>(userEntity);
 
-            UpdateUser.ApplyTo(userToUpdate, ModelState);
+        //    UpdateUser.ApplyTo(userToUpdate, ModelState);
 
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //    if(!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            TryValidateModel(userToUpdate);
+        //    TryValidateModel(userToUpdate);
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            Mapper.Map(userToUpdate, userEntity);
+        //    Mapper.Map(userToUpdate, userEntity);
 
-            if (!_foxStocksRepository.Save())
-            {
-                return StatusCode(500, "Something went wrong.");
-            }
-            return NoContent();
+        //    if (!_foxStocksRepository.Save())
+        //    {
+        //        return StatusCode(500, "Something went wrong.");
+        //    }
+        //    return NoContent();
 
-        }
-        [HttpDelete("Portfolio/{id}/{transId}")]
-        public IActionResult DeleteTransaction(int id, int transId)
-        {
-            if (!_foxStocksRepository.UserExists(id))
-            {
-                return NotFound();
-            }
-            var transactionToDelete = _foxStocksRepository.GetTransaction(id, transId);
-            if(transactionToDelete == null)
-            {
-                return NotFound();
-            }
-            _foxStocksRepository.DeleteTransaction(transactionToDelete);
+        //}
+        //[HttpDelete("Portfolio/{id}/{transId}")]
+        //public IActionResult DeleteTransaction(string id, int transId)
+        //{
+        //    var transactionToDelete = _foxStocksRepository.GetTransaction(id, transId);
+        //    if(transactionToDelete == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _foxStocksRepository.DeleteTransaction(transactionToDelete);
 
-            if (!_foxStocksRepository.Save())
-            {
-                return StatusCode(500, "Something went wrong");
-            }
-            return NoContent();
+        //    if (!_foxStocksRepository.Save())
+        //    {
+        //        return StatusCode(500, "Something went wrong");
+        //    }
+        //    return NoContent();
 
-        }
+        //}
     }
 }

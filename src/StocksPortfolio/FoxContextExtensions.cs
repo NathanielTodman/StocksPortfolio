@@ -15,20 +15,19 @@ namespace StocksPortfolio
             {
                 return;
             }
-            var NewUsers = new List<Users>()
+            var NewUsers = new List<FoxUser>()
             {
-                new Users()
+                new FoxUser()
                 {
-                    Username = "oded",
-                    FirstName = "Sunantha",
-                    Surname = "Thurajane",
+                    UserName = "Oded",
+                    PasswordHash = "P@ssw0rd!",
                     Email = "Sunantha@gmail.com",
-                    Password = "love",
                     Portfolio = new List<Transactions>()
                     {
                         new Transactions()
                         {
-                            Symbol = "NFLX"
+                            Symbol = "NFLX",
+                            Company = "Netflix"
                         },
                         new Transactions()
                         {
@@ -37,13 +36,11 @@ namespace StocksPortfolio
 
                     }
                 },
-                new Users()
+                new FoxUser()
                 {
-                    Username = "nat",
-                    FirstName = "Nathaniel",
-                    Surname = "Todman",
+                    UserName = "Nat",
+                    PasswordHash = "P@ssw0rd!",
                     Email = "86nato@gmail.com",
-                    Password = "love",
                     Portfolio = new List<Transactions>()
                     {
                         new Transactions()

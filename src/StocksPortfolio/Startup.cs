@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using StocksPortfolio.Entities;
 using Microsoft.EntityFrameworkCore;
 using StocksPortfolio.Services;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace StocksPortfolio
 {
@@ -39,7 +41,15 @@ namespace StocksPortfolio
                 ;
             var connectionString = Configuration["ConnectionStrings:FoxConnection"];
             services.AddDbContext<FoxContext>(o=>o.UseSqlServer(connectionString));
+            services.AddIdentity<FoxUser, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
+            })
+            .AddEntityFrameworkStores<FoxContext>()
+            .AddDefaultTokenProviders();
 
+            services.AddScoped < SignInManager<FoxUser>>();
             services.AddScoped<IFoxStocksRepository, FoxStocksRepository>();
         }
 
@@ -47,9 +57,12 @@ namespace StocksPortfolio
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, FoxContext foxContext)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            
+            app.UseStaticFiles();
+
             loggerFactory.AddDebug();
 
-
+            app.UseIdentity();
 
             if (env.IsDevelopment())
             {
@@ -63,16 +76,15 @@ namespace StocksPortfolio
 
             foxContext.EnsureSeedDataForContext();
 
-            app.UseStaticFiles();
 
             AutoMapper.Mapper.Initialize(config =>
             {
-                config.CreateMap<Entities.Users, Models.UserDTO>();
+                config.CreateMap<Entities.FoxUser, Models.UserDTO>();
                 config.CreateMap<Entities.Transactions, Models.TransactionDTO>();
                 config.CreateMap<Models.CreateTransactionDTO, Entities.Transactions>();
-                config.CreateMap<Models.CreateUserDTO, Entities.Users>();
-                config.CreateMap<Models.UpdateUserDTO, Entities.Users>();
-                config.CreateMap<Entities.Users, Models.UpdateUserDTO>();
+                config.CreateMap<Models.CreateUserDTO, Entities.FoxUser>();
+                config.CreateMap<Models.UpdateUserDTO, Entities.FoxUser>();
+                config.CreateMap<Entities.FoxUser, Models.UpdateUserDTO>();
             });
 
             app.UseMvc(routes =>

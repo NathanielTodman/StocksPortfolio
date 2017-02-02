@@ -8,9 +8,10 @@ using StocksPortfolio.Entities;
 namespace StocksPortfolio.Migrations
 {
     [DbContext(typeof(FoxContext))]
-    partial class FoxContextModelSnapshot : ModelSnapshot
+    [Migration("20170131210615_FoxStocksDBFresh")]
+    partial class FoxStocksDBFresh
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")

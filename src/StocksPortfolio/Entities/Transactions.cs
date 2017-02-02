@@ -15,10 +15,7 @@ namespace StocksPortfolio.Entities
         public int Id { get; set; }
         public string Symbol { get; set; }
         public string Company { get; set; }
-        [ForeignKey("UserId")]
-        public Users User { get; set; }
-        public int UserId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.UtcNow;
         public int Quantity { get; set; }
         public double Price { get; set; }
         public bool Buy { get; set; }

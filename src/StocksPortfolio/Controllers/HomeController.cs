@@ -30,7 +30,7 @@ namespace StocksPortfolio.Controllers
         public IActionResult Portfolio()
         {
 
-            var data = _repository.GetPortfolio(1);
+            var data = _repository.GetPortfolio("1");
             if (data == null)
             {
                 return View();
