@@ -29,14 +29,19 @@
                 </td>
                 <td>@stock.Quantity</td>
                 <td>@stock.Price</td>
-                <td>function to return current price</td>
-                @*if change in price is positive td class = pos*@
-                <td class="pos">stock.Change</td>
-                @*else if change is negative 
-                <td class="neg">stock.Change</td>*@
-                @* else
-                <td><b>stock.Change</b></td>
-                *@
+                <td>@stock.CurrentPrice</td>
+                @if (stock.Change > 0)
+                {
+                    <td class="pos">@stock.Change</td>
+                }
+                else if (stock.Change < 0)
+                {
+                    <td class="neg">@stock.Change</td>
+                }
+                else
+                {
+                    <td><b>@stock.Change</b></td>
+                }
                 <td>@stock.Total</td>
             </tr>
         }

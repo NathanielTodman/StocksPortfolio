@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +43,7 @@ namespace StocksPortfolio
                 cfg.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
             })
             .AddEntityFrameworkStores<FoxContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders();           
 
             services.AddScoped < SignInManager<FoxUser>>();
             services.AddScoped<IFoxStocksRepository, FoxStocksRepository>();
@@ -62,7 +58,6 @@ namespace StocksPortfolio
 
             loggerFactory.AddDebug();
 
-            app.UseIdentity();
 
             if (env.IsDevelopment())
             {
@@ -74,18 +69,22 @@ namespace StocksPortfolio
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            foxContext.EnsureSeedDataForContext();
+            //foxContext.EnsureSeedDataForContext();
 
 
             AutoMapper.Mapper.Initialize(config =>
             {
                 config.CreateMap<Entities.FoxUser, Models.UserDTO>();
                 config.CreateMap<Entities.Transactions, Models.TransactionDTO>();
+                config.CreateMap<Entities.Transactions, ViewModels.TransactionModel>();
+                config.CreateMap<ViewModels.TransactionModel, Entities.Transactions>();
                 config.CreateMap<Models.CreateTransactionDTO, Entities.Transactions>();
                 config.CreateMap<Models.CreateUserDTO, Entities.FoxUser>();
                 config.CreateMap<Models.UpdateUserDTO, Entities.FoxUser>();
                 config.CreateMap<Entities.FoxUser, Models.UpdateUserDTO>();
             });
+
+            app.UseIdentity();
 
             app.UseMvc(routes =>
             {

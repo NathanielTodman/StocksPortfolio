@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace StocksPortfolio.Entities
@@ -16,7 +10,7 @@ namespace StocksPortfolio.Entities
             Database.Migrate();
         }
 
-        
+        public DbSet<Portfolio> Portfolio { get; set; }
         public DbSet<Transactions> Transactions { get; set; }
     }
 

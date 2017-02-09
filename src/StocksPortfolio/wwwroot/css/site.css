@@ -6,6 +6,12 @@
     text-align: center;
 }
 
+#logo img, #logo a
+{
+    display:inline-block; 
+    max-height:80px; 
+    margin: -5px auto;
+}
 
 .navbar-default .navbar-brand .img-responsive
 {

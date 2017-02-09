@@ -11,9 +11,11 @@ namespace StocksPortfolio.ViewModels
     {
         [Required]
         public string Username { get; set; }
-        [Required]
+        [Required, DataType(DataType.Password)]
         public string Password { get; set; }
-        //[Required]
-        //public bool RememberMe { get; set; }
+        [Display(Name = "Remember Me")]
+        public bool RememberMe { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }

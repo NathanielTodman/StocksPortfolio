@@ -1,86 +1,109 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using StocksPortfolio.ViewModels;
 using StocksPortfolio.Models;
-using Microsoft.Extensions.Configuration;
 using StocksPortfolio.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using StocksPortfolio.Entities;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace StocksPortfolio.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private IFoxStocksRepository _repository;
-
-        public HomeController(IFoxStocksRepository foxRepository)
+        private UserManager<FoxUser> _userManager;
+        
+        public HomeController(IFoxStocksRepository foxRepository,
+                              UserManager<FoxUser> userManager)
         {
             _repository = foxRepository;
+            _userManager = userManager;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize]
-        public IActionResult Portfolio()
+        [HttpGet]
+        public async Task<IActionResult> Portfolio()
         {
-
-            var data = _repository.GetPortfolio("1");
-            if (data == null)
+            var id = _userManager.GetUserId(User);
+            var portfolioEntities = _repository.GetPortfolio(id);
+            var results = Mapper.Map<IEnumerable<TransactionDTO>>(portfolioEntities);
+            foreach (var stock in results)
             {
-                return View();
+                var temp = await _repository.Lookup(stock.Symbol);
+                stock.CurrentPrice = temp.Price;
+                stock.Change = stock.CurrentPrice - stock.Price;
             }
-            var results = Mapper.Map<IEnumerable<TransactionDTO>>(data);
-
             return View(results);
         }
 
+        [HttpGet]
         public IActionResult Buy()
         {
             return View();
         }
-
-        public IActionResult Sell()
+        [HttpPost]
+        public async Task <IActionResult> Buy(TransactionModel transaction)
         {
-            return View();
+            if (transaction == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var id = _userManager.GetUserId(User);
+            Task<Transactions> lookup = _repository.Lookup(transaction.Symbol);
+            Transactions newTransaction = await lookup;
+            newTransaction.FoxUserId = id;
+            newTransaction.Quantity = transaction.Quantity;
+            newTransaction.Buy = true;
+            _repository.AddTransaction(id, newTransaction);
+            if (!_repository.Save())
+            {
+                return StatusCode(500, "Something went wrong.");
+            }
+
+            return RedirectToAction("Portfolio", "Home");
         }
 
-        public IActionResult Register()
-        {
-            return View();
-        }
 
         [HttpPost]
-        public IActionResult Register(RegisterModel model)
+        public async Task<IActionResult> Sell(TransactionModel transaction)
         {
-            if (ModelState.IsValid)
+            if (transaction == null)
             {
-                // Register user
-                ModelState.Clear();
+                return BadRequest();
             }
-            else
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Something went wrong");
+                return BadRequest(ModelState);
             }
 
-            return View();
-        }
+            var id = _userManager.GetUserId(User);
+            Task<Transactions> lookup = _repository.Lookup(transaction.Symbol);
+            Transactions newTransaction = await lookup;
+            newTransaction.FoxUserId = id;
+            newTransaction.Quantity = transaction.Quantity;
+            newTransaction.Buy = false;
+            _repository.AddTransaction(id, newTransaction);
+            if (!_repository.Save())
+            {
+                return StatusCode(500, "Something went wrong.");
+            }
 
-
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        public IActionResult Logout()
-        {
-            //Logout user
-            return View(Index());
+            return RedirectToAction("Portfolio", "Home");
         }
 
         public IActionResult Quote()

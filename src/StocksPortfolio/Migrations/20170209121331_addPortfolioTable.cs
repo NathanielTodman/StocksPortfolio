@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StocksPortfolio.Migrations
 {
-    public partial class FoxStocksDBFresh : Migration
+    public partial class addPortfolioTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

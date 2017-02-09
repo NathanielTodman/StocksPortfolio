@@ -2,10 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StocksPortfolio.Entities;
 using StocksPortfolio.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StocksPortfolio.Controllers
@@ -13,38 +9,77 @@ namespace StocksPortfolio.Controllers
     public class AuthController : Controller
     {
         private SignInManager<FoxUser> _signInManager;
+        private UserManager<FoxUser> _userManager;
 
-        public AuthController(SignInManager<FoxUser> signInManager)
+        public AuthController(UserManager<FoxUser> userManager, 
+                              SignInManager<FoxUser> signInManager)
         {
+            _userManager = userManager;
             _signInManager = signInManager;
         }
+        
+        [HttpGet]        
+        public IActionResult Register()
+        {
+            return View();
+        }
+        
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new FoxUser { UserName = model.Username, Email = model.Email };
+                var createResult =  await _userManager.CreateAsync(user, model.Password);
+                if (createResult.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, false);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    foreach(var error in createResult.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Something went wrong");
+            }
 
+            return View();
+        }
+        
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Home", "Portfolio");
-            }
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel vm, string returnUrl)
+        public async Task<IActionResult> Login(LoginModel vm)
         {
             if (ModelState.IsValid)
             {
-                var signInResult = await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, true, false);
+                var signInResult = await _signInManager.PasswordSignInAsync(
+                                            vm.Username, vm.Password, 
+                                            vm.RememberMe, false);
 
                 if(signInResult.Succeeded)
                 {
-                    if (string.IsNullOrWhiteSpace(returnUrl))
+                    if (string.IsNullOrWhiteSpace(vm.ReturnUrl))
                     {
-                        return RedirectToAction("");
+                        return RedirectToAction("Index","Home");
+                    }
+                    else if(!Url.IsLocalUrl(vm.ReturnUrl))
+                    {
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
-                        return Redirect(returnUrl);
+                        return Redirect(vm.ReturnUrl);
                     }
                 }
                 else
@@ -54,6 +89,13 @@ namespace StocksPortfolio.Controllers
             }
 
             return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

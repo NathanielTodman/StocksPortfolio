@@ -9,7 +9,7 @@ namespace StocksPortfolio.Services
 {
     public interface IFoxStocksRepository
     {
-        IEnumerable<FoxUser> GetUsers();
+        Task<Transactions> Lookup(string symbol);
         FoxUser GetUser(string userId);
         IEnumerable<Transactions> GetPortfolio(string userId);
         Transactions GetTransaction(string userId, int transactionId);

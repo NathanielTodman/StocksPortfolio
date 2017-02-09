@@ -9,14 +9,8 @@ namespace StocksPortfolio.ViewModels
 {
     public class RegisterModel
     {
-        [Required(ErrorMessage = "Username is required")]
+        [Required(ErrorMessage = "Username is required"), MaxLength(256)]
         public string Username { get; set; }
-
-        [Required(ErrorMessage = "First name is required")]
-        public string FirstName { get; set; }
-
-        [Required(ErrorMessage = "Surname is required")]
-        public string Surname { get; set; }
 
         [Required(ErrorMessage = "E-mail address is required")]
         [EmailAddress]
@@ -26,7 +20,7 @@ namespace StocksPortfolio.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; }
         
-        [Compare("Password", ErrorMessage = "Passwords don't match")]
+        [Compare(nameof(Password), ErrorMessage = "Passwords don't match")]
         [DataType(DataType.Password)]
         public string Password2 { get; set; }
 

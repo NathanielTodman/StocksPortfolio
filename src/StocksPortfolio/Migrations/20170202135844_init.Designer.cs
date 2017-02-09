@@ -8,8 +8,8 @@ using StocksPortfolio.Entities;
 namespace StocksPortfolio.Migrations
 {
     [DbContext(typeof(FoxContext))]
-    [Migration("20170131210615_FoxStocksDBFresh")]
-    partial class FoxStocksDBFresh
+    [Migration("20170202135844_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -1,29 +1,30 @@
-{% extends "layout.html" %}
-
-{% block title %}
-    Buy
-{% endblock %}
-
-{% block main %}
-<form action="{{ url_for('buy') }}" method="post">
-    <fieldset>
-        <div class="form-group">
-            {% if request.args.get('symbol') %}
-            <input autocomplete="off" class="form-control" name="symbol"
-                   placeholder="Company symbol" type="text" value="{{request.args.get('symbol')}}" required />
-            {% else %}
-            <input autocomplete="off" autofocus class="form-control" name="symbol"
-                   placeholder="Company symbol" type="text" required />
-            {% endif %}
-        </div>
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="number"
-                   placeholder="Number of shares" type="number" required />
-        </div>
-        <div class="form-group">
-            <button class="btn btn-default" type="submit">Buy</button>
-            <a href="{{url_for('index')}}" class="btn btn-default">Cancel</a>
-        </div>
-    </fieldset>
-</form>
-{% endblock %}
+@model TransactionModel
+@{
+    ViewData["Title"] = "Buy";
+}
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <form method="post" align="left" asp-antiforgery="true">
+            <fieldset>
+                <div asp-validation-summary="ModelOnly"></div>
+                <div class="form-group">
+                    <label asp-for="Symbol">Company Symbol</label>
+                    <div>
+                        <input autocomplete="off" autofocus class="form-control" asp-for="Symbol" type="text" />
+                        <span asp-validation-for="Symbol" class="text-muted"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Quantity">Quantity</label>
+                    <div>
+                        <input class="form-control" asp-for="Quantity" type="number" />
+                        <span asp-validation-for="Quantity" class="text-muted"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-default" type="submit">Buy</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

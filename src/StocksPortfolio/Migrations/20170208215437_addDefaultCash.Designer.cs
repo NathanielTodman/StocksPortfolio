@@ -8,9 +8,10 @@ using StocksPortfolio.Entities;
 namespace StocksPortfolio.Migrations
 {
     [DbContext(typeof(FoxContext))]
-    partial class FoxContextModelSnapshot : ModelSnapshot
+    [Migration("20170208215437_addDefaultCash")]
+    partial class addDefaultCash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
@@ -173,33 +174,6 @@ namespace StocksPortfolio.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("StocksPortfolio.Entities.Portfolio", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Change");
-
-                    b.Property<string>("Company");
-
-                    b.Property<string>("FoxUserId");
-
-                    b.Property<double>("LastPrice");
-
-                    b.Property<double>("Price");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<string>("Symbol");
-
-                    b.Property<double>("Total");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Portfolio");
                 });
 
             modelBuilder.Entity("StocksPortfolio.Entities.Transactions", b =>
