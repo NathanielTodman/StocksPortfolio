@@ -12,7 +12,9 @@ namespace StocksPortfolio.Entities
     public class FoxUser : IdentityUser
     {
         public double Cash { get; set; } = 10000;
-        public ICollection<Transactions> Portfolio { get; set; }
+        public ICollection<Portfolio> Portfolio { get; set; }
+        = new List<Portfolio>();
+        public ICollection<Transactions> Transaction { get; set; }
         = new List<Transactions>();
     }
 }

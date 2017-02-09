@@ -54,15 +54,15 @@
         </nav>
 
         <main>
-            <div style="text-align:left">
-                <div id="logo">
-                    <a asp-controller="Home" asp-action="Index">
-                        <img class="img-responsive" src="~/images/logo.png" />
-                    </a>
+            <div class="row" style="margin-bottom:-40px">
+                <div class="col-md-3" style="overflow:hidden; float:left;">
+                    <div id="logo">
+                        <a asp-controller="Home" asp-action="Index">
+                            <img src="~/images/logo.png" />
+                        </a>
+                    </div>
                 </div>
             </div>
-            <hr />
-
             @RenderBody()
             <hr />
             <footer>

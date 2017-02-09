@@ -8,7 +8,7 @@ using StocksPortfolio.Entities;
 namespace StocksPortfolio.Migrations
 {
     [DbContext(typeof(FoxContext))]
-    [Migration("20170202135844_init")]
+    [Migration("20170209122715_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,7 @@ namespace StocksPortfolio.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
+                        .IsUnique()
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
@@ -175,6 +176,35 @@ namespace StocksPortfolio.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("StocksPortfolio.Entities.Portfolio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Change");
+
+                    b.Property<string>("Company");
+
+                    b.Property<string>("FoxUserId");
+
+                    b.Property<double>("LastPrice");
+
+                    b.Property<double>("Price");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("Symbol");
+
+                    b.Property<double>("Total");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FoxUserId");
+
+                    b.ToTable("Portfolio");
+                });
+
             modelBuilder.Entity("StocksPortfolio.Entities.Transactions", b =>
                 {
                     b.Property<int>("Id")
@@ -239,10 +269,17 @@ namespace StocksPortfolio.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("StocksPortfolio.Entities.Transactions", b =>
+            modelBuilder.Entity("StocksPortfolio.Entities.Portfolio", b =>
                 {
                     b.HasOne("StocksPortfolio.Entities.FoxUser")
                         .WithMany("Portfolio")
+                        .HasForeignKey("FoxUserId");
+                });
+
+            modelBuilder.Entity("StocksPortfolio.Entities.Transactions", b =>
+                {
+                    b.HasOne("StocksPortfolio.Entities.FoxUser")
+                        .WithMany("Transaction")
                         .HasForeignKey("FoxUserId");
                 });
         }

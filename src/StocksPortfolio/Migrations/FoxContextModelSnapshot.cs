@@ -199,6 +199,8 @@ namespace StocksPortfolio.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FoxUserId");
+
                     b.ToTable("Portfolio");
                 });
 
@@ -266,10 +268,17 @@ namespace StocksPortfolio.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("StocksPortfolio.Entities.Transactions", b =>
+            modelBuilder.Entity("StocksPortfolio.Entities.Portfolio", b =>
                 {
                     b.HasOne("StocksPortfolio.Entities.FoxUser")
                         .WithMany("Portfolio")
+                        .HasForeignKey("FoxUserId");
+                });
+
+            modelBuilder.Entity("StocksPortfolio.Entities.Transactions", b =>
+                {
+                    b.HasOne("StocksPortfolio.Entities.FoxUser")
+                        .WithMany("Transaction")
                         .HasForeignKey("FoxUserId");
                 });
         }

@@ -1,9 +1,10 @@
-﻿@model IEnumerable<StocksPortfolio.Models.TransactionDTO>
+﻿@model IEnumerable<StocksPortfolio.Models.PortfolioDTO>
 @{
     ViewData["Title"] = "Portfolio";
 }
 
-<div><h2>Portfolio</h2></div>
+<div class="col-md-12" style="margin-top:-20px"><h2>Portfolio</h2><hr /></div>
+
 <div class="portfolio">
     <table style="width:100%">
         <tr>
@@ -16,82 +17,46 @@
             <th>Change</th>
             <th>Total</th>
         </tr>
+        @{
+            double total = 0;
+        }
         @foreach (var stock in Model)
         {
+            total += (stock.Quantity * stock.CurrentPrice);
             <tr>
                 <td>@stock.Symbol</td>
                 <td width=22%>@stock.Company</td>
                 <td>
-                    <a asp-controller="Home" asp-action="BuyNow" class="btn btn-default buy">
+                    <a asp-controller="Home" asp-action="Buy" asp-route-id="@stock.Symbol" class="btn btn-default buy">
                         Buy
                     </a>
-                    <a asp-controller="Home" asp-action="SellNow" class="btn btn-default sell">Sell</a>
+                    <a asp-controller="Home" asp-action="Sell" asp-route-id="@stock.Symbol" class="btn btn-default sell">Sell</a>
                 </td>
                 <td>@stock.Quantity</td>
-                <td>@stock.Price</td>
-                <td>@stock.CurrentPrice</td>
+                <td>$@stock.Price.ToString(stock.Price % 1 == 0 ? "N0" : "N2")</td>
+                <td>$@stock.CurrentPrice.ToString(stock.CurrentPrice % 1 == 0 ? "N0" : "N2")</td>
                 @if (stock.Change > 0)
                 {
-                    <td class="pos">@stock.Change</td>
+                    <td class="pos">@stock.Change.ToString(stock.Change % 1 == 0 ? "N0" : "N2")</td>
                 }
                 else if (stock.Change < 0)
                 {
-                    <td class="neg">@stock.Change</td>
+                    <td class="neg">@stock.Change.ToString(stock.Change % 1 == 0 ? "N0" : "N2")</td>
                 }
                 else
                 {
-                    <td><b>@stock.Change</b></td>
+                    <td><b>@stock.Change.ToString(stock.Change % 1 == 0 ? "N0" : "N2")</b></td>
                 }
-                <td>@stock.Total</td>
+                <td>$@stock.Total.ToString(stock.Total % 1 == 0 ? "N0" : "N2")</td>
             </tr>
         }
     </table>
 </div>
 <br>
-    {% if request.args.get('b') %}
-<div align="left">
-    <form action="{{ url_for('buy') }}" method="post">
-        <fieldset>
-            <div class="form-group">
-                <input autocomplete="off" class="form-control" name="symbol"
-                       placeholder="Company symbol" type="text" value="{{request.args.get('b')}}" required />
-            </div>
-            <div class="form-group">
-                <input autocomplete="off" autofocus class="form-control" name="number"
-                       placeholder="Number of shares" type="number" required />
-            </div>
-            <div class="form-group">
-                <button class="btn btn-default" type="submit">Buy</button>
-                <a href="{{url_for('index')}}" class="btn btn-default">Cancel</a>
-            </div>
-        </fieldset>
-    </form>
-</div>
-    {% elif request.args.get('s') %}
-<div align="left">
-    <form action="{{ url_for('sell') }}" method="post">
-        <fieldset>
-            <div class="form-group">
-                <input autocomplete="off" class="form-control" name="symbol"
-                       placeholder="Company symbol" type="text" value="{{request.args.get('s')}}" required />
-            </div>
-            <div class="form-group">
-                <input autocomplete="off" autofocus class="form-control" name="number"
-                       placeholder="Number of shares" type="number" required />
-            </div>
-            <div class="form-group">
-                <button class="btn btn-default" type="submit">Sell</button>
-                <a href="{{url_for('index')}}" class="btn btn-default">Cancel</a>
-            </div>
-        </fieldset>
-    </form>
-</div>
-    {% else %}
 <div>
-    <p>Current balance: <b>{{ balance }}</b></p>
-    <p>Shares total: <b>{{ total }}</b></p>
-    <p>Grand total: <b>{{ grandtotal }}</b></p>
+    @{var cash = double.Parse(ViewData["Cash"].ToString());        
+    }
+    <p>Current balance: <b>$@(cash.ToString("0.00"))</b></p>
+    <p>Shares total: <b>$@total.ToString("0.00")</b></p>
+    <p>Grand total: <b>$@((ViewBag.Cash + total).ToString("0.00"))</b></p>
 </div>
-    {% endif %}
-{% endblock %}
-

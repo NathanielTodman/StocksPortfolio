@@ -150,6 +150,32 @@ namespace StocksPortfolio.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Portfolio",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Change = table.Column<double>(nullable: false),
+                    Company = table.Column<string>(nullable: true),
+                    FoxUserId = table.Column<string>(nullable: true),
+                    LastPrice = table.Column<double>(nullable: false),
+                    Price = table.Column<double>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    Symbol = table.Column<string>(nullable: true),
+                    Total = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Portfolio", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Portfolio_AspNetUsers_FoxUserId",
+                        column: x => x.FoxUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
@@ -177,7 +203,8 @@ namespace StocksPortfolio.Migrations
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
-                column: "NormalizedName");
+                column: "NormalizedName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -211,6 +238,11 @@ namespace StocksPortfolio.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Portfolio_FoxUserId",
+                table: "Portfolio",
+                column: "FoxUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_FoxUserId",
                 table: "Transactions",
                 column: "FoxUserId");
@@ -232,6 +264,9 @@ namespace StocksPortfolio.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Portfolio");
 
             migrationBuilder.DropTable(
                 name: "Transactions");

@@ -74,14 +74,12 @@ namespace StocksPortfolio
 
             AutoMapper.Mapper.Initialize(config =>
             {
-                config.CreateMap<Entities.FoxUser, Models.UserDTO>();
                 config.CreateMap<Entities.Transactions, Models.TransactionDTO>();
                 config.CreateMap<Entities.Transactions, ViewModels.TransactionModel>();
                 config.CreateMap<ViewModels.TransactionModel, Entities.Transactions>();
                 config.CreateMap<Models.CreateTransactionDTO, Entities.Transactions>();
-                config.CreateMap<Models.CreateUserDTO, Entities.FoxUser>();
-                config.CreateMap<Models.UpdateUserDTO, Entities.FoxUser>();
-                config.CreateMap<Entities.FoxUser, Models.UpdateUserDTO>();
+                config.CreateMap<Models.TransactionDTO, Entities.Portfolio>();
+                config.CreateMap<Entities.Portfolio, Models.PortfolioDTO>();
             });
 
             app.UseIdentity();

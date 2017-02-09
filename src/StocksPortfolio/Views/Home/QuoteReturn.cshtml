@@ -1,0 +1,13 @@
+﻿@model StocksPortfolio.Models.TransactionDTO
+@{
+    ViewData["Title"] = "Quote";
+}
+<div class="row">
+    <div class="col-md-12" >
+        <div class="col-md-6 col-md-offset-3">
+            <p>Symbol: <b>@Model.Symbol</b></p>
+        <p>Company Name: <b>@Model.Company</b></p>
+        <p>Price: <b>$@Model.Price</b></p>
+    </div>
+</div>
+</div>

@@ -11,8 +11,8 @@ namespace StocksPortfolio.Services
     {
         Task<Transactions> Lookup(string symbol);
         FoxUser GetUser(string userId);
-        IEnumerable<Transactions> GetPortfolio(string userId);
-        Transactions GetTransaction(string userId, int transactionId);
+        IEnumerable<Portfolio> GetPortfolio(string userId);
+        IEnumerable<Transactions> GetTransactions(string userId);
         void AddTransaction(string userId, Transactions transaction);
         void DeleteTransaction(Transactions transaction);
         bool Save();

@@ -36,20 +36,36 @@ namespace StocksPortfolio.Controllers
         {
             var id = _userManager.GetUserId(User);
             var portfolioEntities = _repository.GetPortfolio(id);
-            var results = Mapper.Map<IEnumerable<TransactionDTO>>(portfolioEntities);
+            var results = Mapper.Map<IEnumerable<PortfolioDTO>>(portfolioEntities);
             foreach (var stock in results)
             {
                 var temp = await _repository.Lookup(stock.Symbol);
                 stock.CurrentPrice = temp.Price;
                 stock.Change = stock.CurrentPrice - stock.Price;
             }
+            var user = _repository.GetUser(id);
+            ViewData["Cash"] = user.Cash;
             return View(results);
         }
 
         [HttpGet]
         public IActionResult Buy()
         {
-            return View();
+            return View();            
+        }
+
+        [HttpGet("/Home/Buy/{id}")]
+        public IActionResult Buy(string id)
+        {
+            if(id == null)
+            {
+                return View();
+            }
+            else
+            {
+                ViewData["Symbol"] = id;
+                return View();
+            }
         }
         [HttpPost]
         public async Task <IActionResult> Buy(TransactionModel transaction)
@@ -78,6 +94,26 @@ namespace StocksPortfolio.Controllers
             return RedirectToAction("Portfolio", "Home");
         }
 
+        [HttpGet]
+        public IActionResult Sell()
+        {
+            return View();
+        }
+
+        [HttpGet("/Home/Sell/{id}")]
+        public IActionResult Sell(string id)
+        {
+            if (id == null)
+            {
+                return View();
+            }
+            else
+            {
+                ViewData["Symbol"] = id;
+                return View();
+            }
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Sell(TransactionModel transaction)
@@ -90,6 +126,7 @@ namespace StocksPortfolio.Controllers
             {
                 return BadRequest(ModelState);
             }
+            transaction.Symbol.ToUpper();
 
             var id = _userManager.GetUserId(User);
             Task<Transactions> lookup = _repository.Lookup(transaction.Symbol);
@@ -111,9 +148,32 @@ namespace StocksPortfolio.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Quote(TransactionModel transaction)
+        {
+            if (transaction == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Task<Transactions> lookup = _repository.Lookup(transaction.Symbol);
+            Transactions newTransaction = await lookup;
+            var result = Mapper.Map<TransactionDTO>(newTransaction);
+            result.Symbol.ToUpper();
+            return View("QuoteReturn", result);
+        }
+
+
+        [HttpGet]
         public IActionResult History()
         {
-            return View();
+            var id = _userManager.GetUserId(User);
+            var results = _repository.GetTransactions(id);
+            var history = Mapper.Map<IEnumerable<TransactionDTO>>(results);
+            return View(history);
         }
 
         public IActionResult Error()

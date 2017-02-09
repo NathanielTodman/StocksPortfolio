@@ -1,35 +1,39 @@
-﻿{% extends "layout.html" %}
+﻿@model IEnumerable<StocksPortfolio.Models.TransactionDTO>
+@{
+    ViewData["Title"] = "History";
+}
 
-{% block title %}
-    History
-{% endblock %}
-
-{% block main %}
-<div><h2>Transaction history</h2></div>
+<div class="col-md-12" style="margin-top:-20px"><h2>Transaction History</h2><hr /></div>
 <div class="portfolio">
     <table style="width:100%">
         <tr>
-            <th>Buy/Sell</th>
-            <th>Symbol</th>
-            <th>Price</th>
-            <th>Shares</th>
-            <th>Total</th>
+            <th>Transaction</th>
             <th>Date</th>
+            <th>Symbol</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
         </tr>
-        {% for stock in stocks %}
-        <tr>
-            {% if stock.buy_sell=="Sell" %}
-            <td class="neg">{{stock.buy_sell}}</td>
-            {% elif stock.buy_sell=="Buy" %}
-            <td class="pos">{{stock.buy_sell}}</td>
-            {% endif %}
-            <td>{{stock.company}}</td>
-            <td>{{stock.price|usd}}</td>
-            <td>{{stock.quantity|int}}</td>
-            <td>{{stock.total|usd}}</td>
-            <td width=20%>{{stock.date}}</td>
-        </tr>
-        {% endfor %}
+        @foreach (var stock in Model)
+        {
+            <tr>
+                @if (stock.Buy == true)
+                {
+                    <td class="pos">Buy</td>
+                }
+                else
+                {
+                    <td class="neg">Sell</td>
+                }
+                <td width=22%>@stock.Date</td>
+                <td>@stock.Symbol</td>
+                <td>@stock.Company</td>
+                <td>@stock.Quantity</td>
+                <td>$@stock.Price.ToString(stock.Price % 1 == 0 ? "N0" : "N2")</td>
+                <td>$@(stock.Price*stock.Quantity)</td>
+            </tr>
+        }
     </table>
 </div>
-{% endblock %}
+
