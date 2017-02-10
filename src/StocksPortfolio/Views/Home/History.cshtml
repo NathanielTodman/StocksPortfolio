@@ -30,8 +30,8 @@
                 <td>@stock.Symbol</td>
                 <td>@stock.Company</td>
                 <td>@stock.Quantity</td>
-                <td>$@stock.Price.ToString(stock.Price % 1 == 0 ? "N0" : "N2")</td>
-                <td>$@(stock.Price*stock.Quantity)</td>
+                <td>$@stock.Price.ToString("N2")</td>
+                <td>$@((stock.Price*stock.Quantity).ToString("N2"))</td>
             </tr>
         }
     </table>

@@ -39,7 +39,7 @@ namespace StocksPortfolio.Controllers
             var results = Mapper.Map<IEnumerable<PortfolioDTO>>(portfolioEntities);
             foreach (var stock in results)
             {
-                var temp = await _repository.Lookup(stock.Symbol);
+                var temp = await _repository.LookupPrice(stock.Symbol);
                 stock.CurrentPrice = temp.Price;
                 stock.Change = stock.CurrentPrice - stock.Price;
             }
@@ -80,15 +80,22 @@ namespace StocksPortfolio.Controllers
             }
 
             var id = _userManager.GetUserId(User);
-            Task<Transactions> lookup = _repository.Lookup(transaction.Symbol);
-            Transactions newTransaction = await lookup;
+            transaction.Symbol = transaction.Symbol.ToUpper();
+            var newTransaction = Mapper.Map<Transactions>(transaction);
+            await _repository.Lookup(newTransaction);
+            if (newTransaction.Company == "N/A")
+            {
+                ModelState.AddModelError("", "Not a valid company symbol");
+                return View();
+            }
             newTransaction.FoxUserId = id;
-            newTransaction.Quantity = transaction.Quantity;
             newTransaction.Buy = true;
             _repository.AddTransaction(id, newTransaction);
             if (!_repository.Save())
             {
-                return StatusCode(500, "Something went wrong.");
+                ModelState.AddModelError("", @"Something went wrong, 
+                    please ensure you have enough cash to purchase this stock");
+                return View();
             }
 
             return RedirectToAction("Portfolio", "Home");
@@ -126,18 +133,23 @@ namespace StocksPortfolio.Controllers
             {
                 return BadRequest(ModelState);
             }
-            transaction.Symbol.ToUpper();
-
             var id = _userManager.GetUserId(User);
-            Task<Transactions> lookup = _repository.Lookup(transaction.Symbol);
-            Transactions newTransaction = await lookup;
+            transaction.Symbol = transaction.Symbol.ToUpper();
+            var newTransaction = Mapper.Map<Transactions>(transaction);
+            await _repository.Lookup(newTransaction);
+            if(newTransaction.Company == "N/A")
+            {
+                ModelState.AddModelError("", "Not a valid company symbol");
+                return View();
+            }
             newTransaction.FoxUserId = id;
-            newTransaction.Quantity = transaction.Quantity;
             newTransaction.Buy = false;
             _repository.AddTransaction(id, newTransaction);
             if (!_repository.Save())
             {
-                return StatusCode(500, "Something went wrong.");
+                ModelState.AddModelError("", @"Something went wrong, 
+                    please ensure you have enough of this stock to sell");
+                return View();
             }
 
             return RedirectToAction("Portfolio", "Home");
@@ -159,10 +171,15 @@ namespace StocksPortfolio.Controllers
             {
                 return BadRequest(ModelState);
             }
-            Task<Transactions> lookup = _repository.Lookup(transaction.Symbol);
-            Transactions newTransaction = await lookup;
+            transaction.Symbol = transaction.Symbol.ToUpper();
+            var newTransaction = Mapper.Map<Transactions>(transaction);
+            await _repository.Lookup(newTransaction);
+            if (newTransaction.Company == "N/A")
+            {
+                ModelState.AddModelError("", "Not a valid company symbol");
+                return View();
+            }
             var result = Mapper.Map<TransactionDTO>(newTransaction);
-            result.Symbol.ToUpper();
             return View("QuoteReturn", result);
         }
 

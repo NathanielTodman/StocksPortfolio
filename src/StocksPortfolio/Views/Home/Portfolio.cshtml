@@ -33,21 +33,21 @@
                     <a asp-controller="Home" asp-action="Sell" asp-route-id="@stock.Symbol" class="btn btn-default sell">Sell</a>
                 </td>
                 <td>@stock.Quantity</td>
-                <td>$@stock.Price.ToString(stock.Price % 1 == 0 ? "N0" : "N2")</td>
-                <td>$@stock.CurrentPrice.ToString(stock.CurrentPrice % 1 == 0 ? "N0" : "N2")</td>
+                <td>$@stock.Price.ToString("N2")</td>
+                <td>$@stock.CurrentPrice.ToString("N2")</td>
                 @if (stock.Change > 0)
                 {
-                    <td class="pos">@stock.Change.ToString(stock.Change % 1 == 0 ? "N0" : "N2")</td>
+                    <td class="pos">@stock.Change.ToString("N2")</td>
                 }
                 else if (stock.Change < 0)
                 {
-                    <td class="neg">@stock.Change.ToString(stock.Change % 1 == 0 ? "N0" : "N2")</td>
+                    <td class="neg">@stock.Change.ToString("N2")</td>
                 }
                 else
                 {
-                    <td><b>@stock.Change.ToString(stock.Change % 1 == 0 ? "N0" : "N2")</b></td>
+                    <td><b>@stock.Change.ToString("N2")</b></td>
                 }
-                <td>$@stock.Total.ToString(stock.Total % 1 == 0 ? "N0" : "N2")</td>
+                <td>$@stock.Total.ToString("N2")</td>
             </tr>
         }
     </table>
@@ -56,7 +56,7 @@
 <div>
     @{var cash = double.Parse(ViewData["Cash"].ToString());        
     }
-    <p>Current balance: <b>$@(cash.ToString("0.00"))</b></p>
-    <p>Shares total: <b>$@total.ToString("0.00")</b></p>
-    <p>Grand total: <b>$@((ViewBag.Cash + total).ToString("0.00"))</b></p>
+    <p>Current balance: <b>$@(cash.ToString("N2"))</b></p>
+    <p>Shares total: <b>$@total.ToString("N2")</b></p>
+    <p>Grand total: <b>$@((ViewBag.Cash + total).ToString("N2"))</b></p>
 </div>

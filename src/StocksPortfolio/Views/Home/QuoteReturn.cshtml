@@ -8,6 +8,11 @@
             <p>Symbol: <b>@Model.Symbol</b></p>
         <p>Company Name: <b>@Model.Company</b></p>
         <p>Price: <b>$@Model.Price</b></p>
+        <br />
+            <a asp-controller="Home" asp-action="Buy" asp-route-id="@Model.Symbol" class="btn btn-default buy">
+                Buy
+            </a>
+        <a asp-controller="Home" asp-action="Quote" class="btn btn-default">New Quote</a>
     </div>
 </div>
 </div>

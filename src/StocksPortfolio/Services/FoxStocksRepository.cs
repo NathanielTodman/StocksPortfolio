@@ -23,7 +23,24 @@ namespace StocksPortfolio.Services
             _context = context;
         }
 
-        public async Task<Transactions> Lookup(string Symbol)
+        public async Task<Transactions> Lookup(Transactions transaction)
+        {
+            string url = ("http://download.finance.yahoo.com/d/quotes.csv?s=" + transaction.Symbol + "&f=snl1");
+            var request = WebRequest.Create(url);
+            request.Method = "GET";
+            var response = await request.GetResponseAsync();
+            var reader = new CsvReader(new StreamReader(response.GetResponseStream()));
+            string[] results = reader.Parser.Read();
+            transaction.Symbol = results[0];
+            transaction.Company = results[1];
+            if (results[2] != "N/A")
+            {
+                transaction.Price = Convert.ToDouble(results[2]);
+            }
+            return transaction;
+        }
+
+        public async Task<Transactions> LookupPrice(string Symbol)
         {
             string url = ("http://download.finance.yahoo.com/d/quotes.csv?s=" + Symbol + "&f=snl1");
             var request = WebRequest.Create(url);
@@ -60,7 +77,7 @@ namespace StocksPortfolio.Services
             var transactionDTO = Mapper.Map<TransactionDTO>(transaction);
             if (transaction.Buy == true && user.Cash < totalPurchase)
             {
-                throw new Exception("User does not have enough cash to make this purchase");
+                Console.WriteLine("User does not have enough cash to make this purchase");
             }
             else if(transaction.Buy == true)
             {
@@ -84,7 +101,7 @@ namespace StocksPortfolio.Services
             {
                 if(portfolio.Quantity - transaction.Quantity < 0)
                 {
-                    throw new Exception("User does not have enough of this stock to make sale");
+                    Console.WriteLine("User does not have enough of this stock to sell");
                 }
                 else if(portfolio.Quantity - transaction.Quantity == 0)
                 {
@@ -115,7 +132,7 @@ namespace StocksPortfolio.Services
 
         public bool Save()
         {
-            return (_context.SaveChanges() >= 0);
+            return (_context.SaveChanges() > 0);
         }
     }
 }

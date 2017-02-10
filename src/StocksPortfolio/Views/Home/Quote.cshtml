@@ -11,7 +11,7 @@
                     <div class="form-group">
                         <label asp-for="Symbol">Company Symbol</label>
                         <div>
-                            <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" value="@ViewData["Symbol"]" />
+                            <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" value="@ViewData["Symbol"]" required/>
                             <span asp-validation-for="Symbol" class="text-muted"></span>
                         </div>
                     </div>

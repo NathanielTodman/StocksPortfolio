@@ -13,11 +13,11 @@
                         <div>
                             @if (ViewBag.Symbol == null)
                             {
-                                <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" autofocus" />
+                                <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" autofocus" required/>
                             }
                             else
                             {
-                                <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" value="@ViewData["Symbol"]" />
+                                <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" value="@ViewData["Symbol"]" required/>
                             }
                             <span asp-validation-for="Symbol" class="text-muted"></span>
                         </div>
@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <label asp-for="Quantity">Quantity</label>
                         <div>
-                            <input autocomplete="off" autofocus class="form-control" asp-for="Quantity" type="number" />
+                            <input autocomplete="off" autofocus class="form-control" asp-for="Quantity" type="number" required/>
                             <span asp-validation-for="Quantity" class="text-muted"></span>
                         </div>
                     </div>
