@@ -25,7 +25,10 @@
             total += (stock.Quantity * stock.CurrentPrice);
             <tr>
                 <td>@stock.Symbol</td>
-                <td width=22%>@stock.Company</td>
+                <td width=22%><a asp-controller="Home" asp-action="QuoteReturn" asp-route-id="@stock.Symbol" >
+
+                                  @stock.Company
+</a></td>
                 <td>
                     <a asp-controller="Home" asp-action="Buy" asp-route-id="@stock.Symbol" class="btn btn-default buy">
                         Buy

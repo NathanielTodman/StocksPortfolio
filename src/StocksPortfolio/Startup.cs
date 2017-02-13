@@ -43,8 +43,14 @@ namespace StocksPortfolio
                 cfg.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
             })
             .AddEntityFrameworkStores<FoxContext>()
-            .AddDefaultTokenProviders();           
-
+            .AddDefaultTokenProviders();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("*")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod());
+            });
             services.AddScoped < SignInManager<FoxUser>>();
             services.AddScoped<IFoxStocksRepository, FoxStocksRepository>();
         }
@@ -63,6 +69,7 @@ namespace StocksPortfolio
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+                app.UseCors("AllowSpecificOrigin");
             }
             else
             {

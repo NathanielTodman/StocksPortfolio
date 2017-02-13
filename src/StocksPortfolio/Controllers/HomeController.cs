@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Identity;
 using StocksPortfolio.Entities;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Cors;
 
 namespace StocksPortfolio.Controllers
 {
+    [EnableCors("AllowSpecificOrigin")]
     [Authorize]
     public class HomeController : Controller
     {
@@ -180,7 +182,22 @@ namespace StocksPortfolio.Controllers
                 return View();
             }
             var result = Mapper.Map<TransactionDTO>(newTransaction);
+
             return View("QuoteReturn", result);
+        }
+        
+        [HttpGet("/Home/QuoteReturn/{id}")]
+        public IActionResult QuoteReturn(string id)
+        {
+            if (id == null)
+            {
+                return View();
+            }
+            else
+            {
+                ViewData["Symbol"] = id;
+                return View();
+            }
         }
 
 
