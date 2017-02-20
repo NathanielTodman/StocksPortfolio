@@ -81,6 +81,12 @@ namespace StocksPortfolio.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (transaction.Quantity <= 0)
+            {
+                ModelState.AddModelError("", "Quantity must be greater than 0");
+                return View();
+            }
+
             var id = _userManager.GetUserId(User);
             transaction.Symbol = transaction.Symbol.ToUpper();
             var newTransaction = Mapper.Map<Transactions>(transaction);
@@ -134,6 +140,11 @@ namespace StocksPortfolio.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+            if(transaction.Quantity <= 0)
+            {
+                ModelState.AddModelError("", "Quantity must be greater than 0");
+                return View();
             }
             var id = _userManager.GetUserId(User);
             transaction.Symbol = transaction.Symbol.ToUpper();

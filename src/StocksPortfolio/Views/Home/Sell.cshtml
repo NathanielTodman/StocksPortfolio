@@ -2,12 +2,15 @@
 @{
     ViewData["Title"] = "Sell";
 }
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
 <div class="row">
     <div class="col-md-12" >
         <div class="col-md-6 col-md-offset-3">
             <form method="post" align="left" asp-antiforgery="true">
                 <fieldset>
-                    <div asp-validation-summary="ModelOnly"></div>
                     <div class="form-group">
                         <label asp-for="Symbol">Company Symbol</label>
                         <div>
@@ -19,6 +22,7 @@
                             {
                                 <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" value="@ViewData["Symbol"]" required/>
                             }
+                            <br />
                             <span asp-validation-for="Symbol" class="text-muted"></span>
                         </div>
                     </div>
@@ -26,6 +30,7 @@
                         <label asp-for="Quantity">Quantity</label>
                         <div>
                             <input autocomplete="off" autofocus class="form-control" asp-for="Quantity" type="number" required/>
+                            <br />
                             <span asp-validation-for="Quantity" class="text-muted"></span>
                         </div>
                     </div>
@@ -34,5 +39,9 @@
                     </div>
                 </fieldset>
             </form>
+            <div class="col-md-push-6" align="left">
+                <div class="summary alert alert-warning" asp-validation-summary="ModelOnly"></div>
+            </div>
+
         </div>
     </div></div>

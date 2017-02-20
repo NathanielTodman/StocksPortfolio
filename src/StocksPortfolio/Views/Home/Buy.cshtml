@@ -2,30 +2,35 @@
 @{
     ViewData["Title"] = "Buy";
 }
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
 <div class="row">
-    <div class="col-md-12" >
+    <div class="col-md-12">
         <div class="col-md-6 col-md-offset-3">
             <form method="post" align="left" asp-antiforgery="true">
                 <fieldset>
-                    <div class="summary" asp-validation-summary="ModelOnly"></div>
                     <div class="form-group">
                         <label asp-for="Symbol">Company Symbol</label>
                         <div>
                             @if (ViewBag.Symbol == null)
                             {
-                                <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" autofocus" required/>
+                                <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" autofocus" required />
                             }
                             else
                             {
-                                <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" value="@ViewData["Symbol"]" required/>
+                                <input autocomplete="off" class="form-control" asp-for="Symbol" type="text" value="@ViewData["Symbol"]" required />
                             }
+                            <br />
                             <span asp-validation-for="Symbol" class="text-muted"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label asp-for="Quantity">Quantity</label>
                         <div>
-                            <input class="form-control" asp-for="Quantity" type="number" autofocus required/>
+                            <input class="form-control" asp-for="Quantity" type="number" autofocus required />
+                            <br />
                             <span asp-validation-for="Quantity" class="text-muted"></span>
                         </div>
                     </div>
@@ -33,7 +38,13 @@
                         <button class="btn btn-success" type="submit">Buy</button>
                     </div>
                 </fieldset>
-
             </form>
+
+            <div class="col-md-push-6" align="left">
+                <div class="summary alert alert-warning" asp-validation-summary="ModelOnly"></div>
+            </div>
         </div>
-    </div></div>
+        </div>
+
+
+</div>

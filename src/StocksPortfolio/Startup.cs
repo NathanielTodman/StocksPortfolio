@@ -41,6 +41,11 @@ namespace StocksPortfolio
             {
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
+                cfg.Password.RequireDigit = false;
+                cfg.Password.RequireNonAlphanumeric = false;
+                cfg.Password.RequiredLength = 5;
+                cfg.Password.RequireUppercase = false;
+                cfg.Password.RequireLowercase = false;
             })
             .AddEntityFrameworkStores<FoxContext>()
             .AddDefaultTokenProviders();

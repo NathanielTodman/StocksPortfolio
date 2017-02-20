@@ -75,6 +75,10 @@ namespace StocksPortfolio.Services
             var portfolio = _context.Portfolio.Where(
                 p => p.FoxUserId == userId && p.Symbol == transaction.Symbol).FirstOrDefault();
             var transactionDTO = Mapper.Map<TransactionDTO>(transaction);
+            if (transaction.Quantity <= 0)
+            {
+                Console.WriteLine("Quantity must be greater than 0");
+            }
             if (transaction.Buy == true && user.Cash < totalPurchase)
             {
                 Console.WriteLine("User does not have enough cash to make this purchase");
@@ -99,7 +103,11 @@ namespace StocksPortfolio.Services
             }
             else if(transaction.Buy == false)
             {
-                if(portfolio.Quantity - transaction.Quantity < 0)
+                if(portfolio == null)
+                {
+                    Console.WriteLine("User does not own any of this stock to sell");
+                }
+                else if(portfolio.Quantity - transaction.Quantity < 0)
                 {
                     Console.WriteLine("User does not have enough of this stock to sell");
                 }

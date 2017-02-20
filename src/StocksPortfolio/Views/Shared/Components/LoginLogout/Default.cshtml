@@ -2,9 +2,8 @@
 {
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <form method="post" asp-controller="Auth" asp-action="Logout" asp-antiforger="true">
-                <input type="submit" class="btn btn-link navbar-btn navbar-link" value="Logout"/>
-            </form>
+            <a asp-controller="Auth" asp-action="Logout">Logout
+            </a>
         </li>
     </ul>
 }

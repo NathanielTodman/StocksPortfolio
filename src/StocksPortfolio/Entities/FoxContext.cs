@@ -7,6 +7,8 @@ namespace StocksPortfolio.Entities
     {
         public FoxContext(DbContextOptions<FoxContext> options) : base(options)
         {
+
+            Database.SetCommandTimeout(150000);
             Database.Migrate();
         }
 
