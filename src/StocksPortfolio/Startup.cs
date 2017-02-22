@@ -31,12 +31,10 @@ namespace StocksPortfolio
         {
             // Add framework services.
             services.AddSingleton(Configuration);
-            services.AddMvc()
-                .AddMvcOptions(o=> o.OutputFormatters.Add(
-                    new XmlDataContractSerializerOutputFormatter()))
-                ;
+            services.AddMvc();
             var connectionString = Configuration["ConnectionStrings:FoxConnection"];
             services.AddDbContext<FoxContext>(o=>o.UseSqlServer(connectionString));
+            // Set simple passwords
             services.AddIdentity<FoxUser, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;
@@ -83,7 +81,7 @@ namespace StocksPortfolio
 
             //foxContext.EnsureSeedDataForContext();
 
-
+            // for mapping from model to viewmodel and vice versa
             AutoMapper.Mapper.Initialize(config =>
             {
                 config.CreateMap<Entities.Transactions, Models.TransactionDTO>();

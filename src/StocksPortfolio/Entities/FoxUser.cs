@@ -11,6 +11,7 @@ namespace StocksPortfolio.Entities
 {
     public class FoxUser : IdentityUser
     {
+        //default starting cash
         public double Cash { get; set; } = 10000;
         public ICollection<Portfolio> Portfolio { get; set; }
         = new List<Portfolio>();

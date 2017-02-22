@@ -7,7 +7,7 @@ namespace StocksPortfolio.Entities
     {
         public FoxContext(DbContextOptions<FoxContext> options) : base(options)
         {
-
+            //getting timeout errors, this fixed the problem
             Database.SetCommandTimeout(150000);
             Database.Migrate();
         }

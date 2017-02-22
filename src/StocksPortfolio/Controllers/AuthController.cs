@@ -8,6 +8,7 @@ namespace StocksPortfolio.Controllers
 {
     public class AuthController : Controller
     {
+        
         private SignInManager<FoxUser> _signInManager;
         private UserManager<FoxUser> _userManager;
 
@@ -24,6 +25,7 @@ namespace StocksPortfolio.Controllers
             return View();
         }
         
+        //Register user
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
@@ -58,6 +60,7 @@ namespace StocksPortfolio.Controllers
             return View();
         }
 
+        //Attempt login
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel vm)
         {
@@ -91,6 +94,7 @@ namespace StocksPortfolio.Controllers
             return View();
         }
 
+        //Logout user
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
